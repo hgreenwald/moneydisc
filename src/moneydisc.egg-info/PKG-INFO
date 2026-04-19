@@ -1,3 +1,11 @@
+Metadata-Version: 2.4
+Name: moneydisc
+Version: 0.1.0
+Summary: Utilities for downloading and analyzing ultimate frisbee game data.
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: gdown==5.2.0
+
 # moneydisc
 A repository designed to calculate and analyze statistics for ultimate frisbee teams from pass logs. Originally developed on top of outputs from the Statto App.
 

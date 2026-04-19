@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+src/moneydisc/__init__.py
+src/moneydisc.egg-info/PKG-INFO
+src/moneydisc.egg-info/SOURCES.txt
+src/moneydisc.egg-info/dependency_links.txt
+src/moneydisc.egg-info/requires.txt
+src/moneydisc.egg-info/top_level.txt
+src/moneydisc/analysis/__init__.py
+src/moneydisc/analysis/compute_stats.py
+src/moneydisc/data_ingestion/__init__.py
+src/moneydisc/data_ingestion/download_google_drive.py
+tests/test_compute_stats.py
+tests/test_download_google_drive.py

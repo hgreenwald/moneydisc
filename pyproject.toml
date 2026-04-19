@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moneydisc"
+version = "0.1.0"
+description = "Utilities for downloading and analyzing ultimate frisbee game data."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "gdown==5.2.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
