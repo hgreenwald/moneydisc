@@ -1,9 +1,11 @@
-"""Minimal entrypoint for loading downloaded files and computing stats."""
+"""Run the full StatsBank pipeline: load data, compute stats, write outputs."""
 
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
+
+from moneydisc.analysis.config import GAMES
 
 
 def parse_args() -> argparse.Namespace:
@@ -11,36 +13,49 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--input-dir",
         default="data/raw",
-        help="Directory containing downloaded game files.",
+        help="Directory containing downloaded game CSVs.",
     )
     parser.add_argument(
         "--output-dir",
         default="data/processed",
         help="Directory to write computed outputs.",
     )
+    parser.add_argument(
+        "--model-dir",
+        default="models",
+        help="Directory containing GPA model pickle files.",
+    )
     return parser.parse_args()
 
 
-def load_data_files(input_dir: str) -> list[Path]:
-    input_path = Path(input_dir)
-    if not input_path.exists():
-        return []
-    return sorted(path for path in input_path.rglob("*") if path.is_file())
+def run(
+    input_dir: str,
+    output_dir: str,
+    model_dir: str = "models",
+    games: dict[str, str] | None = None,
+) -> Path:
+    from moneydisc.analysis.stats_bank import StatsBank
 
-
-def run(input_dir: str, output_dir: str) -> Path:
-    files = load_data_files(input_dir)
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
-    summary_file = output_path / "summary.txt"
-    summary_file.write_text(f"Loaded {len(files)} file(s) from {input_dir}\n", encoding="utf-8")
-    return summary_file
+    sb = StatsBank(
+        data_dir=input_dir,
+        output_dir=output_dir,
+        model_dir=model_dir,
+        games=games if games is not None else GAMES,
+    )
+    sb.prepare_data()
+    sb.compute_all_stats()
+    sb.export_stats()
+    return Path(output_dir) / "aggregated_player_stats.csv"
 
 
 def main() -> None:
     args = parse_args()
-    summary_file = run(input_dir=args.input_dir, output_dir=args.output_dir)
-    print(f"Wrote {summary_file}")
+    output_file = run(
+        input_dir=args.input_dir,
+        output_dir=args.output_dir,
+        model_dir=args.model_dir,
+    )
+    print(f"Wrote {output_file}")
 
 
 if __name__ == "__main__":
